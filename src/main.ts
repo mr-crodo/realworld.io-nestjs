@@ -1,3 +1,8 @@
+// src/main.ts
+if(!process.env.IS_TS_NODE) {
+  require('module-alias/register');
+}
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
