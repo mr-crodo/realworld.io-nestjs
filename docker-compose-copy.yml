@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  postgres:
+    profiles:
+      - dev
+      - prod
+    # Используем образ Postgres
+    image: postgres:15-alpine
+    container_name: myapp_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+      # Порт 5432 внутри контейнера → 5433 на хосте,
+      # чтобы не конфликтовать с локальным Postgres на 5432:
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    networks:
+      - backend_net
+
+  backend_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    profiles:
+      - dev
+    container_name: backend_nest
+    restart: always
+    environment:
+      # Переменные для подключения к БД
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER}
+      DB_PASS: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+      # Публичный порт приложения
+      PORT: ${APP_PORT}
+      NODE_ENV: ${NODE_ENV}
+    # Пробросим порт NestJS (обычно 3000) на хост:
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    depends_on:
+      - postgres
+    networks:
+      - backend_net
+
+  backend_prod:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    profiles:
+      - prod
+    container_name: backend_nest
+    restart: always
+    environment:
+      # Переменные для подключения к БД
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER}
+      DB_PASS: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+      # Публичный порт приложения
+      PORT: ${APP_PORT}
+      NODE_ENV: ${NODE_ENV}
+    # Пробросим порт NestJS (обычно 3000) на хост:
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    depends_on:
+      - postgres
+    networks:
+      - backend_net
+
+# Добавьте этот сервис, чтобы ничего не запускалось без профиля
+  _dummy:
+    image: alpine
+    profiles:
+      - dev
+      - prod
+
+volumes:
+  pgdata:
+
+networks:
+  backend_net:
+    driver: bridge
+
