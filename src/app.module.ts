@@ -5,7 +5,6 @@ import { TagModule } from '@app/tag/tag.module';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import ormconfig from "@app/ormconfig";
 import {ConfigModule} from "@nestjs/config";
-import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -15,7 +14,6 @@ import { MessageModule } from './message/message.module';
       }),
       TypeOrmModule.forRoot(ormconfig),
       TagModule,
-      MessageModule
   ],
   controllers: [AppController],
   providers: [AppService],
