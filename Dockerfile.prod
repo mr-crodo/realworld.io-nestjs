@@ -1,0 +1,32 @@
+# Базовый образ для сборки
+FROM node:18-alpine AS builder
+
+# Рабочая директория
+WORKDIR /usr/src/app
+
+# Копируем package.json и устанавливаем только production-зависимости
+COPY package*.json ./
+RUN npm ci --only=prod
+
+# Копируем исходники и компилируем проект
+COPY . .
+RUN npm run build
+
+# Финальный образ
+FROM node:18-alpine
+
+# Рабочая директория
+WORKDIR /usr/src/app
+
+# Копируем только необходимое
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/package*.json ./
+
+# Безопасность и минимальный footprint
+RUN addgroup -g 1001 nodejs && \
+    adduser -u 1001 -G nodejs -s /bin/sh -D nodejs
+USER 1001
+
+# Команда запуска
+CMD ["node", "dist/main.js"]

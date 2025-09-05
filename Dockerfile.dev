@@ -1,0 +1,22 @@
+FROM node:18-alpine
+
+# Рабочая директория
+WORKDIR /usr/src/app
+
+# Установка dev-зависимостей
+COPY package*.json ./
+RUN npm ci
+
+# Копируем исходники
+COPY . .
+
+# Установка nodemon для hot-reload
+RUN npm install -g @nestjs/cli
+
+# Безопасность
+RUN addgroup -g 1001 nodejs && \
+    adduser -u 1001 -G nodejs -s /bin/sh -D nodejs
+USER 1001
+
+# Команда запуска
+CMD ["npm", "run", "dev"]
