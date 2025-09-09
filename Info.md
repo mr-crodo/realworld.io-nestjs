@@ -14,6 +14,6 @@ ls -A | grep -v -E "^(\.env|Dockerfile|Dockerfile\.dev|Dockerfile\.prod|docker-c
 
 ### В Windows (PowerShell):
 ```bash
-Get-ChildItem -Force | Where-Object { $_.Name -notin @('.env', 'Dockerfile', 'Dockerfile.dev', 'Dockerfile.prod', 'docker-compose.yml', 'docker-compose-copy.yml') } | Remove-Item -Recurse -Force
+Get-ChildItem -Force | Where-Object { $_.Name -notin @('ed.env', 'Dockerfile', 'Dockerfile.dev', 'Dockerfile.prod', 'docker-compose.yml', 'docker-compose-copy.yml') } | Remove-Item -Recurse -Force
 
 ```

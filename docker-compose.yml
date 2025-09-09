@@ -4,7 +4,7 @@ x-backend: &backend
   environment:
     POSTGRES_HOST_LOCAL: postgres       # ← здесь явно
     POSTGRES_PORT_LOCAL: 5432           # ← здесь явно
-    POSTGRES_USER: ${POSTGRES_USER}     # из .env
+    POSTGRES_USER: ${POSTGRES_USER}     # из ed.env
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     POSTGRES_DB: ${POSTGRES_DB}
   ports:
@@ -67,7 +67,9 @@ services:
       - "${APP_PORT}:${APP_PORT}"
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./node_modules:/usr/src/app/node_modules  # ← явно монтируем локальные node_modules
+    # Если ты хочешь использовать node_modules из образа (а не локальные), то:
+    # УДАЛИ эту строку → - /usr/src/app/node_modules
     networks:
       - backend_net
 
