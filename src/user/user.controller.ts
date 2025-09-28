@@ -6,7 +6,9 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  Put,
   Req,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
@@ -18,6 +20,8 @@ import { User } from "./decorators/user.decorators";
 // ✅ Используем type-only импорт для типов в декораторах
 import type { ExpressRequestInterface } from "@app/types/expressRequest.interface";
 import { UserEntity } from "@app/user/entities/user.entity";
+import { AuthGuard } from "@app/user/guards/auth.guards";
+import { UpdateUserDto } from "@app/user/dto/update.user.dto";
 
 @Controller("users")
 export class UserController {
@@ -42,6 +46,7 @@ export class UserController {
   }
 
   @Get("user")
+  @UseGuards(AuthGuard)
   async currentUser(
     // sdes ispolzuyem customniy dekorator
     @User() user: UserEntity,
@@ -55,8 +60,18 @@ export class UserController {
     // if (!request.user) {
     //   throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
     // }
-      console.log("User ID", currentUserId)
+    console.log("User ID", currentUserId);
     // Теперь TypeScript знает, что request.user точно не null/undefined
     return this.userService.buildUserResponse(user);
+  }
+
+  @Put("user")
+  @UseGuards(AuthGuard)
+  async updateCurrentUser(
+    @User("id") currentUserId: number,
+    @Body("user") updateUserDto: UpdateUserDto,
+  ): Promise<UserResponseInterface> {
+      const user = await this.userService.updateUser(currentUserId, updateUserDto);
+      return this.userService.buildUserResponse(user)
   }
 }

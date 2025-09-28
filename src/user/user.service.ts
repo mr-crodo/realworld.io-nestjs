@@ -10,6 +10,7 @@ import { UserResponseInterface } from "@app/user/types/userResponse.interface";
 import { LoginUserDto } from "@app/user/dto/login.user.dto";
 import { compare } from "bcrypt";
 import { UserWithoutPassword } from "@app/user/types/user-without-password.interface";
+import { UpdateUserDto } from "@app/user/dto/update.user.dto";
 
 @Injectable()
 export class UserService {
@@ -91,6 +92,18 @@ export class UserService {
     const { password, ...userWithoutPassword } = user;
 
     return userWithoutPassword;
+  }
+
+  async updateUser(
+    userId: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserEntity> {
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+    }
+    Object.assign(user, updateUserDto);
+    return await this.userRepository.save(user);
   }
 
   buildUserResponse(
