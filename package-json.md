@@ -39,6 +39,7 @@
 ### Создаёт файл миграции с SQL-командами для внесения изменений.
 #### Генерирует новую миграцию на основе изменений в Entity.  
 #### Автоматически создаёт файл миграции с SQL-операциями.  
+#### Nado  указать путь к migrations - papke qde vse migracii i ukazat nazvanie fayla dla migracii, например:
 ```bash
 " npm run migration:generate src/migrations/CreateTags": "npm run typeorm migration:generate",
 ```
