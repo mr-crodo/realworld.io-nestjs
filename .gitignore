@@ -559,3 +559,4 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+!/src/user/types/userResponse.interface.ts
