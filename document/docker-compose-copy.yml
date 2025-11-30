@@ -24,8 +24,8 @@ services:
 
   backend_dev:
     build:
-      context: .
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: ../Dockerfile.dev
     profiles:
       - dev
     container_name: backend_nest
@@ -50,8 +50,8 @@ services:
 
   backend_prod:
     build:
-      context: .
-      dockerfile: Dockerfile.prod
+      context: ..
+      dockerfile: ../Dockerfile.prod
     profiles:
       - prod
     container_name: backend_nest

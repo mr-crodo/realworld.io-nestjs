@@ -8,7 +8,8 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nodemon",
+    "start": "IS_TS_NODE=true ts-node -r tsconfig-paths/register src/main.ts",
+    "start:dev": "nest start --watch",
     "dev": "nodemon",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -17,31 +18,17 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d src/ormdatasource.ts",
-    "db:drop": "npm run typeorm schema:drop",
-    "db:create": "npm run typeorm schema:sync",
-    "migration:generate": "npm run typeorm migration:generate",
-    "migration:run": "npm run typeorm migration:run",
-    "migration:revert": "npm run typeorm migration:revert"
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
-    "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
-    "@nestjs/typeorm": "^11.0.0",
-    "bcrypt": "^6.0.0",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.2",
-    "jsonwebtoken": "^9.0.2",
     "module-alias": "^2.2.3",
-    "nodemon": "^3.1.10",
-    "pg": "^8.16.3",
+    "nodemon": "^3.1.11",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1",
-    "typeorm": "^0.3.26"
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
